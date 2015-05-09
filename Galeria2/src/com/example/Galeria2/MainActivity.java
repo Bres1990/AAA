@@ -2,7 +2,9 @@ package com.example.Galeria2;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.app.Activity;
@@ -11,13 +13,32 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.Toast;
+import android.widget.*;
 
 public class MainActivity extends Activity {
+    int i = 0;
+    ImageView imageView;
+    GridView gridview;
+    ImageAdapter myImageAdapter;
+    String ExternalStorageDirectoryPath, targetPath;
+    File[] files;
+    File targetDirector;
+    Intent imageIntent;
+    Bitmap[] bitmaps;
+    Bitmap bm;
 
+    /*public void populateBitmaps() {
+        View rootView = getWindow().getDecorView().findViewById(android.R.id.content);
+
+        for (i = 0; i < gridview.getChildCount(); i++) {
+            rootView.setDrawingCacheEnabled(true);
+            bitmaps[i] = Bitmap.createBitmap(gridview.getChildAt(i).getDrawingCache());
+            if (bitmaps[i] == null) {
+                System.out.println("bitmaps[i] jest nullem");
+            }
+            rootView.setDrawingCacheEnabled(false);
+        }
+    }*/
 
     public class ImageAdapter extends BaseAdapter {
 
@@ -30,6 +51,14 @@ public class MainActivity extends Activity {
 
         void add(String path){
             itemList.add(path);
+        }
+
+        void clear() {
+            itemList.clear();
+        }
+
+        void remove(int index){
+            itemList.remove(index);
         }
 
         @Override
@@ -51,7 +80,7 @@ public class MainActivity extends Activity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            ImageView imageView;
+
             if (convertView == null) {  // if it's not recycled, initialize some attributes
                 imageView = new ImageView(mContext);
                 imageView.setLayoutParams(new GridView.LayoutParams(220, 220));
@@ -60,6 +89,8 @@ public class MainActivity extends Activity {
             } else {
                 imageView = (ImageView) convertView;
             }
+
+
 
             Bitmap bm = decodeSampledBitmapFromUri(itemList.get(position), 220, 220);
 
@@ -106,11 +137,6 @@ public class MainActivity extends Activity {
 
     }
 
-    GridView gridview;
-    ImageAdapter myImageAdapter;
-    String ExternalStorageDirectoryPath, targetPath;
-    File[] files;
-    File targetDirector;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -124,8 +150,7 @@ public class MainActivity extends Activity {
         ExternalStorageDirectoryPath = Environment
                 .getExternalStorageDirectory()
                 .getAbsolutePath();
-        //targetPath = "/DCIM/100ANDRO/";
-        targetPath = ExternalStorageDirectoryPath + "/DCIM/100ANDRO/";
+        targetPath = ExternalStorageDirectoryPath + "/DCIM/Test/";
 
         Toast.makeText(getApplicationContext(), targetPath, Toast.LENGTH_LONG).show();
         targetDirector = new File(targetPath);
@@ -138,6 +163,45 @@ public class MainActivity extends Activity {
         }
         catch (NullPointerException e) {
             e.printStackTrace();
+        }
+        bitmaps = new Bitmap[gridview.getChildCount()];
+
+        gridview.setOnItemClickListener(myOnItemClickListener);
+
+
+        imageIntent = new Intent(this, imageDisplay.class);
+    }
+
+    AdapterView.OnItemClickListener myOnItemClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            //System.out.println(position);
+
+                    //System.out.println("Position: "+position+", Length: "+ bitmaps.length);
+                    view.setDrawingCacheEnabled(true);
+                    bm = Bitmap.createBitmap(gridview.getChildAt(position).getDrawingCache());
+                    view.setDrawingCacheEnabled(false);
+
+            imageIntent.putExtra("BitmapImage", bm);
+            startActivityForResult(imageIntent, 0);
+        }
+    };
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent)
+    {
+        super.onActivityResult(requestCode, resultCode, imageIntent);
+
+        if (resultCode == Activity.RESULT_OK)
+        {
+            switch (requestCode)
+            {
+                case 0:
+                {
+                    //do something
+                }
+                break;
+            }
         }
     }
 
