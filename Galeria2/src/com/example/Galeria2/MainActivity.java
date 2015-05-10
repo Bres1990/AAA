@@ -17,6 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 
+import com.polites.android.GestureImageView;
+
 public class MainActivity extends Activity {
     public ArrayList<String> itemList = new ArrayList<String>();
     ImageView imageView;

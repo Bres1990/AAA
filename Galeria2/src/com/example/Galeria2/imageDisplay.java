@@ -7,7 +7,9 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import com.polites.android.GestureImageView;
 
 import java.net.URI;
 
@@ -25,10 +27,15 @@ public class imageDisplay extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.image);
 
-        image = (ImageView)findViewById(R.id.full_image);
 
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        GestureImageView view = new GestureImageView(this);
+
+        image = (GestureImageView)findViewById(R.id.full_image);
         Uri imageURI = Uri.parse(getIntent().getStringExtra("ImageURI"));
         image.setImageURI(imageURI);
+
+        view.setLayoutParams(params);
 
         mainIntent = new Intent();
     }
