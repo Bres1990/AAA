@@ -3,9 +3,13 @@ package com.example.Galeria2;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+
+import java.net.URI;
 
 /**
  * Activity handling the display of selected image
@@ -22,8 +26,9 @@ public class imageDisplay extends Activity {
         setContentView(R.layout.image);
 
         image = (ImageView)findViewById(R.id.full_image);
-        Bitmap bitmap = getIntent().getParcelableExtra("BitmapImage");
-        image.setImageBitmap(bitmap);
+
+        Uri imageURI = Uri.parse(getIntent().getStringExtra("ImageURI"));
+        image.setImageURI(imageURI);
 
         mainIntent = new Intent();
     }

@@ -1,10 +1,12 @@
 package com.example.Galeria2;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.app.Activity;
@@ -16,7 +18,7 @@ import android.view.ViewGroup;
 import android.widget.*;
 
 public class MainActivity extends Activity {
-    int i = 0;
+    public ArrayList<String> itemList = new ArrayList<String>();
     ImageView imageView;
     GridView gridview;
     ImageAdapter myImageAdapter;
@@ -43,7 +45,6 @@ public class MainActivity extends Activity {
     public class ImageAdapter extends BaseAdapter {
 
         private Context mContext;
-        ArrayList<String> itemList = new ArrayList<String>();
 
         public ImageAdapter(Context c) {
             mContext = c;
@@ -175,15 +176,15 @@ public class MainActivity extends Activity {
     AdapterView.OnItemClickListener myOnItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            //System.out.println(position);
 
-                    //System.out.println("Position: "+position+", Length: "+ bitmaps.length);
-                    view.setDrawingCacheEnabled(true);
-                    bm = Bitmap.createBitmap(gridview.getChildAt(position).getDrawingCache());
-                    view.setDrawingCacheEnabled(false);
 
-            imageIntent.putExtra("BitmapImage", bm);
-            startActivityForResult(imageIntent, 0);
+                    /*
+                    * We're passing the URI to prevent it from exceeding the binder transaction buffer
+                    **/
+                    String imageURI = itemList.get(position);
+                    imageIntent.putExtra("ImageURI", imageURI);
+
+                    startActivityForResult(imageIntent, 0);
         }
     };
 
