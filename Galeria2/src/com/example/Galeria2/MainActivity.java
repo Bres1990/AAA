@@ -1,23 +1,18 @@
 package com.example.Galeria2;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.Environment;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 
-import com.polites.android.GestureImageView;
+import java.io.File;
+import java.util.ArrayList;
 
 public class MainActivity extends Activity {
     public ArrayList<String> itemList = new ArrayList<String>();
@@ -29,20 +24,7 @@ public class MainActivity extends Activity {
     File targetDirector;
     Intent imageIntent;
     Bitmap[] bitmaps;
-    Bitmap bm;
 
-    /*public void populateBitmaps() {
-        View rootView = getWindow().getDecorView().findViewById(android.R.id.content);
-
-        for (i = 0; i < gridview.getChildCount(); i++) {
-            rootView.setDrawingCacheEnabled(true);
-            bitmaps[i] = Bitmap.createBitmap(gridview.getChildAt(i).getDrawingCache());
-            if (bitmaps[i] == null) {
-                System.out.println("bitmaps[i] jest nullem");
-            }
-            rootView.setDrawingCacheEnabled(false);
-        }
-    }*/
 
     public class ImageAdapter extends BaseAdapter {
 
@@ -155,7 +137,7 @@ public class MainActivity extends Activity {
                 .getAbsolutePath();
         targetPath = ExternalStorageDirectoryPath + "/DCIM/Test/";
 
-        Toast.makeText(getApplicationContext(), targetPath, Toast.LENGTH_LONG).show();
+        //Toast.makeText(getApplicationContext(), targetPath, Toast.LENGTH_LONG).show();
         targetDirector = new File(targetPath);
 
         try {
