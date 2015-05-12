@@ -170,8 +170,10 @@ public class MainActivity extends Activity {
 
                     File f = new File(itemList.get(position));
                     Long last_modified = f.lastModified();
-
                     imageIntent.putExtra("last_modified", last_modified);
+
+                    String fileName = f.getName();
+                    imageIntent.putExtra("fileName", fileName);
 
                     startActivityForResult(imageIntent, 0);
         }

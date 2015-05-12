@@ -2,12 +2,12 @@ package com.example.Galeria2;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.*;
-import android.widget.ImageView;
-import android.widget.Toast;
+import android.widget.*;
 import com.polites.android.GestureImageView;
 
 import java.util.Date;
@@ -22,6 +22,10 @@ import java.util.Date;
 public class imageDisplay extends Activity implements ActionBar.OnNavigationListener {
     ImageView image;
     Intent mainIntent;
+    Dialog ratingDialog;
+    RatingBar ratingBar;
+    String name;
+    Float userRankValue;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,7 +45,7 @@ public class imageDisplay extends Activity implements ActionBar.OnNavigationList
         mainIntent = new Intent();
 
         ActionBar imageActionBar = getActionBar();
-        imageActionBar.setTitle("Details"); //Title should be the file name TODO
+        imageActionBar.setTitle(getIntent().getStringExtra("fileName")); //Title should be the file name TODO
 
     }
 
@@ -88,7 +92,31 @@ public class imageDisplay extends Activity implements ActionBar.OnNavigationList
         switch (id)
         {
             case R.id.rating_item:
-                Toast.makeText(getApplicationContext(), "Image rating stub", Toast.LENGTH_LONG).show();
+                ratingDialog = new Dialog(this);
+                ratingDialog.setContentView(R.layout.ratingdialog);
+                ratingDialog.setCancelable(true);
+                ratingBar = (RatingBar)ratingDialog.findViewById(R.id.dialog_ratingbar);
+
+                TextView text = (TextView)ratingDialog.findViewById(R.id.rank_dialog_text1);
+                name = "Image rating";
+                text.setText(name);
+
+                Button updateButton = (Button)ratingDialog.findViewById(R.id.rank_dialog_button);
+                updateButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        userRankValue = ratingBar.getRating();
+                        ratingDialog.dismiss();
+                    }
+                });
+
+                if (userRankValue != null) {
+                    ratingBar.setRating(userRankValue);
+                }
+
+                //now that the dialog is set up, it's time to show it
+                ratingDialog.show();
+
                 return true;
             case R.id.locating_item:
                 Toast.makeText(getApplicationContext(), "Localization stub", Toast.LENGTH_LONG).show();
