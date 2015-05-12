@@ -168,6 +168,11 @@ public class MainActivity extends Activity {
                     String imageURI = itemList.get(position);
                     imageIntent.putExtra("ImageURI", imageURI);
 
+                    File f = new File(itemList.get(position));
+                    Long last_modified = f.lastModified();
+
+                    imageIntent.putExtra("last_modified", last_modified);
+
                     startActivityForResult(imageIntent, 0);
         }
     };

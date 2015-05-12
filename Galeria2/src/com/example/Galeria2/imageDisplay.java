@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import com.polites.android.GestureImageView;
 
+import java.util.Date;
+
 
 /**
  * Activity handling the display of selected image
@@ -54,7 +56,10 @@ public class imageDisplay extends Activity implements ActionBar.OnNavigationList
     }
 
     public void showDetails() {
-        Toast.makeText(getApplicationContext(), "Details stub", Toast.LENGTH_LONG).show();
+        long modifiedData = getIntent().getLongExtra("last_modified", 0);
+        Date modifiedDate = new Date(modifiedData);
+        String modifiedDateString = String.valueOf(modifiedDate);
+        Toast.makeText(getApplicationContext(), modifiedDateString, Toast.LENGTH_LONG).show();
     }
 
     /**
