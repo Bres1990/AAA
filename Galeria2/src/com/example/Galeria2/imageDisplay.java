@@ -26,10 +26,23 @@ public class imageDisplay extends Activity implements ActionBar.OnNavigationList
     RatingBar ratingBar;
     String name;
     Float userRankValue;
+    Integer filePosition;
+    Boolean saved;
+    Bundle imageState;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate(Bundle outState) {
+        if (outState != null) {
+            saved = getIntent().getBooleanExtra("saved", false);
+            //if (outState != null) {
+            if (saved == false) {
+                filePosition = getIntent().getIntExtra("filePosition", 0);
+            } else {
+                filePosition = getIntent().getIntExtra("filePosition", 0);
+                userRankValue = getIntent().getFloatExtra("userRankValue", 0);
+            }
+        }
+        super.onCreate(outState);
         setContentView(R.layout.image);
 
 
@@ -45,12 +58,27 @@ public class imageDisplay extends Activity implements ActionBar.OnNavigationList
         mainIntent = new Intent();
 
         ActionBar imageActionBar = getActionBar();
-        imageActionBar.setTitle(getIntent().getStringExtra("fileName")); //Title should be the file name TODO
+        imageActionBar.setTitle(getIntent().getStringExtra("fileName"));
+
+
+
+
 
     }
 
+
+
+
     @Override
     public void onBackPressed() {
+        mainIntent.putExtra("userRankValue2", userRankValue);
+        mainIntent.putExtra("filePosition2", filePosition);
+        mainIntent.putExtra("saved2", true);
+        //imageState.putFloat("userRankValue2", userRankValue);
+        //imageState.putInt("filePosition2", filePosition);
+        //imageState.putBoolean("saved2", true);
+        mainIntent.putExtra("imageState", imageState);
+
         setResult(Activity.RESULT_OK, mainIntent);
         finish();
     }
@@ -96,6 +124,10 @@ public class imageDisplay extends Activity implements ActionBar.OnNavigationList
                 ratingDialog.setContentView(R.layout.ratingdialog);
                 ratingDialog.setCancelable(true);
                 ratingBar = (RatingBar)ratingDialog.findViewById(R.id.dialog_ratingbar);
+
+                if (userRankValue != null) {
+                    ratingBar.setRating(userRankValue);
+                }
 
                 TextView text = (TextView)ratingDialog.findViewById(R.id.rank_dialog_text1);
                 name = "Image rating";

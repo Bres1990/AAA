@@ -1,6 +1,8 @@
 package com.example.Galeria2;
 
 import android.app.Activity;
+import android.app.Notification;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -19,11 +21,19 @@ public class MainActivity extends Activity {
     ImageView imageView;
     GridView gridview;
     ImageAdapter myImageAdapter;
-    String ExternalStorageDirectoryPath, targetPath;
+    String ExternalStorageDirectoryPath, fileName, imageURI, targetPath;
     File[] files;
-    File targetDirector;
+    File f, targetDirector;
     Intent imageIntent;
     Bitmap[] bitmaps;
+    Float[] userRankArray;
+    Float userRankValue;
+    long last_modified;
+    int filePosition;
+    boolean saved;
+    Bundle outState, mainState, imageState;
+    private Notification note;
+    LocalService service;
 
 
     public class ImageAdapter extends BaseAdapter {
@@ -122,11 +132,46 @@ public class MainActivity extends Activity {
 
     }
 
+    AdapterView.OnItemClickListener myOnItemClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+
+                    /*
+                    * We're passing the URI to prevent it from exceeding the binder transaction buffer
+                    **/
+            imageURI = itemList.get(position);
+            imageIntent.putExtra("ImageURI", imageURI);
+
+            f = new File(itemList.get(position));
+            last_modified = f.lastModified();
+            imageIntent.putExtra("last_modified", last_modified);
+
+            fileName = f.getName();
+            imageIntent.putExtra("fileName", fileName);
+
+            if (saved == false) {
+               imageIntent.putExtra("filePosition", filePosition);
+               imageIntent.putExtra("saved", saved);
+            } else {
+                imageIntent.putExtra("filePosition", filePosition);
+                System.out.println("Saved: "+saved);
+                imageIntent.putExtra("userRankValue", userRankArray[filePosition]);
+            }
+
+
+            startActivityForResult(imageIntent, 0);
+        }
+    };
+
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate(Bundle mainState) {
+        super.onCreate(mainState);
         setContentView(R.layout.main);
+        
+
+        System.out.println("BLABLABLABLABLABLA!!!!!");
 
         gridview = (GridView) findViewById(R.id.gridview);
         myImageAdapter = new ImageAdapter(this);
@@ -153,31 +198,63 @@ public class MainActivity extends Activity {
 
         gridview.setOnItemClickListener(myOnItemClickListener);
 
+        saved = false;
+
+
 
         imageIntent = new Intent(this, imageDisplay.class);
+
+        //note = new Notification(R.drawable.ic_launcher, "Show must go on!", System.currentTimeMillis());
+        //note.flags |= Notification.FLAG_NO_CLEAR;
+
+        //getIntent().startForeground(1337, note);
+
     }
 
-    AdapterView.OnItemClickListener myOnItemClickListener = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    @Override
+    public void onLowMemory() {
+
+    }
 
 
-                    /*
-                    * We're passing the URI to prevent it from exceeding the binder transaction buffer
-                    **/
-                    String imageURI = itemList.get(position);
-                    imageIntent.putExtra("ImageURI", imageURI);
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
 
-                    File f = new File(itemList.get(position));
-                    Long last_modified = f.lastModified();
-                    imageIntent.putExtra("last_modified", last_modified);
 
-                    String fileName = f.getName();
-                    imageIntent.putExtra("fileName", fileName);
+                //mainState.putSerializable("userRankValue", userRankArray[filePosition]);
+                //mainState.putSerializable("filePosition", filePosition);
+        super.onSaveInstanceState(outState);
+            if (outState == null) {
+                outState = new Bundle();
+            }
+        imageIntent.putExtra("outState", outState);
+        //Service.startForeground(1337, note);
+        //outState.putBundle("outState", outState);
+        //
 
-                    startActivityForResult(imageIntent, 0);
+
+            //Toast.makeText(getApplicationContext(), filePosition, Toast.LENGTH_LONG).show();
         }
-    };
+
+
+    @Override
+    protected void onRestoreInstanceState(Bundle mainState) {
+        super.onRestoreInstanceState(mainState);
+
+        //userRankValue = imageState.getFloat("userRankValue2");
+        //filePosition = imageState.getInt("filePosition2");
+        //saved = imageState.getBoolean("saved2");
+
+        //userRankArray[filePosition] = userRankValue;
+        //Toast.makeText(getApplicationContext(), filePosition, Toast.LENGTH_LONG).show();
+        userRankValue = getIntent().getFloatExtra("userRankValue2", 0);
+        filePosition = getIntent().getIntExtra("filePosition2", 0);
+        saved = getIntent().getBooleanExtra("saved2", false);
+
+        imageState = getIntent().getBundleExtra("imageState");
+    }
+
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent)
@@ -190,7 +267,20 @@ public class MainActivity extends Activity {
             {
                 case 0:
                 {
-                    //do something
+                    //try {
+                        //filePosition = getIntent().getIntExtra("filePosition2", 0);
+                        //userRankValue = getIntent().getFloatExtra("userRankValue2", 0);
+                        //userRankArray[filePosition] = userRankValue;
+                    //} catch (NullPointerException e) {
+                    //    e.printStackTrace();
+                    //}
+
+                    /*userRankValue = getIntent().getFloatExtra("userRankValue2", 0);
+                    filePosition = getIntent().getIntExtra("filePosition2", 0);
+                    saved = getIntent().getBooleanExtra("saved2", false);
+
+                    imageState = getIntent().getBundleExtra("imageState");*/
+                    //onRestoreInstanceState(mainState);
                 }
                 break;
             }

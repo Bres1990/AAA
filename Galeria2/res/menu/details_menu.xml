@@ -3,8 +3,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
             android:title="Rate image"
-            android:id="@+id/rating_item"
-            android:icon="@drawable/ic_launcher">
+            android:id="@+id/rating_item">
     </item>
     <item
             android:title="Show location"
