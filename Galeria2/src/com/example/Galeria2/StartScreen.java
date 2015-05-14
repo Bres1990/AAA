@@ -1,4 +1,4 @@
-package com.jmj_studio.intro;
+package com.example.Galeria2;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,13 +6,16 @@ import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+import com.example.Galeria2.PhotoManipulation;
 
 import java.io.File;
+import java.util.Hashtable;
 
 
 public class StartScreen extends Activity {
@@ -24,41 +27,38 @@ public class StartScreen extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.introscreen);
+        String TAG = "Typefaces";
+        Typeface menuFont = null;
         //powinno ustawiac czcionke
-        Typeface menuFont=Typeface.createFromAsset(getAssets(), "fonts/cambria.ttf");
 
-        Button gallery=(Button) findViewById(R.id.gallery);
-        gallery.setTypeface(menuFont);
+        final Hashtable<String, Typeface> cache = new Hashtable<String, Typeface>();
 
-        Button draw=(Button) findViewById(R.id.draw);
-        gallery.setTypeface(menuFont);
-
-        Button takePhoto=(Button) findViewById(R.id.photo);
-        gallery.setTypeface(menuFont);
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        synchronized (cache) {
+            if (!cache.containsKey("fonts/cambria.ttf")) {
+                try {
+                    menuFont = Typeface.createFromAsset(this.getAssets(),
+                            "fonts/cambria.ttf");
+                    cache.put("fonts/cambria.ttf", menuFont);
+                } catch (Exception e) {
+                    Log.e(TAG, "Could not get typeface '" + "fonts/cambria.ttf"
+                            + "' because " + e.getMessage());
+                }
+            }
         }
 
-        return super.onOptionsItemSelected(item);
+        //Typeface menuFont=Typeface.createFromAsset(getAssets(), "fonts/cambria.ttf");
+    if(menuFont!=null) {
+        Button gallery = (Button) findViewById(R.id.gallery);
+        gallery.setTypeface(menuFont);
+
+        Button draw = (Button) findViewById(R.id.draw);
+        gallery.setTypeface(menuFont);
+
+        Button takePhoto = (Button) findViewById(R.id.photo);
+        gallery.setTypeface(menuFont);
     }
+    }
+
 
     public void onClick(View view) {
 
@@ -66,12 +66,9 @@ public class StartScreen extends Activity {
         opens the gallery
          */
         if (view.getId() == R.id.gallery) {
-            try {
                 Intent selectedIntent = new Intent(StartScreen.this, MainActivity.class);
                 startActivityForResult(selectedIntent,2222);
-            } catch(ClassNotFoundException e){
-                Toast.makeText(getBaseContext(), e + " not found (1) ", Toast.LENGTH_LONG).show();
-            }
+
 
         }
 
@@ -79,12 +76,9 @@ public class StartScreen extends Activity {
         opens drawing tool
          */
         if  (view.getId() == R.id.draw){
-            try {
                 Intent selectedIntent = new Intent(StartScreen.this, DrawingActivity.class);
                 startActivityForResult(selectedIntent,3333);
-            } catch(ClassNotFoundException e){
-                Toast.makeText(getBaseContext(), e + " not found (1) ", Toast.LENGTH_LONG).show();
-            }
+
         }
 
         /*

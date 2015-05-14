@@ -1,4 +1,4 @@
-package com.jmj_studio.intro;
+package com.example.Galeria2;
 
 import android.app.Activity;
 import android.content.Intent;
