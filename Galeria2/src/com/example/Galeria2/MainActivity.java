@@ -16,6 +16,9 @@ import android.widget.*;
 import java.io.File;
 import java.util.ArrayList;
 
+import static android.widget.AdapterView.*;
+import static android.widget.AdapterView.OnItemLongClickListener;
+
 public class MainActivity extends Activity {
     public ArrayList<String> itemList = new ArrayList<String>();
     ImageView imageView;
@@ -31,9 +34,7 @@ public class MainActivity extends Activity {
     long last_modified;
     int filePosition;
     boolean saved;
-    Bundle outState, mainState, imageState;
     private Notification note;
-    LocalService service;
 
 
     public class ImageAdapter extends BaseAdapter {
@@ -132,7 +133,7 @@ public class MainActivity extends Activity {
 
     }
 
-    AdapterView.OnItemClickListener myOnItemClickListener = new AdapterView.OnItemClickListener() {
+    OnItemClickListener myOnItemClickListener = new OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
@@ -161,6 +162,18 @@ public class MainActivity extends Activity {
 
 
             startActivityForResult(imageIntent, 0);
+        }
+    };
+
+    OnItemLongClickListener myOnItemLongClickListener = new OnItemLongClickListener() {
+        @Override
+        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            itemList.remove(itemList.get(position));
+            //getContentResolver().delete(uri, null, null)
+            //File file = new File(itemList.get(position));
+            //file.delete();
+            myImageAdapter.notifyDataSetChanged();
+            return false;
         }
     };
 
@@ -197,17 +210,11 @@ public class MainActivity extends Activity {
         bitmaps = new Bitmap[gridview.getChildCount()];
 
         gridview.setOnItemClickListener(myOnItemClickListener);
+        gridview.setOnItemLongClickListener(myOnItemLongClickListener);
 
         saved = false;
 
-
-
         imageIntent = new Intent(this, imageDisplay.class);
-
-        //note = new Notification(R.drawable.ic_launcher, "Show must go on!", System.currentTimeMillis());
-        //note.flags |= Notification.FLAG_NO_CLEAR;
-
-        //getIntent().startForeground(1337, note);
 
     }
 
@@ -217,23 +224,15 @@ public class MainActivity extends Activity {
     }
 
 
-    @Override
+    /*@Override
     protected void onSaveInstanceState(Bundle outState) {
 
-
-                //mainState.putSerializable("userRankValue", userRankArray[filePosition]);
-                //mainState.putSerializable("filePosition", filePosition);
         super.onSaveInstanceState(outState);
             if (outState == null) {
                 outState = new Bundle();
             }
         imageIntent.putExtra("outState", outState);
-        //Service.startForeground(1337, note);
-        //outState.putBundle("outState", outState);
-        //
 
-
-            //Toast.makeText(getApplicationContext(), filePosition, Toast.LENGTH_LONG).show();
         }
 
 
@@ -241,18 +240,12 @@ public class MainActivity extends Activity {
     protected void onRestoreInstanceState(Bundle mainState) {
         super.onRestoreInstanceState(mainState);
 
-        //userRankValue = imageState.getFloat("userRankValue2");
-        //filePosition = imageState.getInt("filePosition2");
-        //saved = imageState.getBoolean("saved2");
-
-        //userRankArray[filePosition] = userRankValue;
-        //Toast.makeText(getApplicationContext(), filePosition, Toast.LENGTH_LONG).show();
         userRankValue = getIntent().getFloatExtra("userRankValue2", 0);
         filePosition = getIntent().getIntExtra("filePosition2", 0);
         saved = getIntent().getBooleanExtra("saved2", false);
 
         imageState = getIntent().getBundleExtra("imageState");
-    }
+    }*/
 
 
 
@@ -267,20 +260,7 @@ public class MainActivity extends Activity {
             {
                 case 0:
                 {
-                    //try {
-                        //filePosition = getIntent().getIntExtra("filePosition2", 0);
-                        //userRankValue = getIntent().getFloatExtra("userRankValue2", 0);
-                        //userRankArray[filePosition] = userRankValue;
-                    //} catch (NullPointerException e) {
-                    //    e.printStackTrace();
-                    //}
 
-                    /*userRankValue = getIntent().getFloatExtra("userRankValue2", 0);
-                    filePosition = getIntent().getIntExtra("filePosition2", 0);
-                    saved = getIntent().getBooleanExtra("saved2", false);
-
-                    imageState = getIntent().getBundleExtra("imageState");*/
-                    //onRestoreInstanceState(mainState);
                 }
                 break;
             }

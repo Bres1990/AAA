@@ -61,13 +61,7 @@ public class imageDisplay extends Activity implements ActionBar.OnNavigationList
         imageActionBar.setTitle(getIntent().getStringExtra("fileName"));
 
 
-
-
-
     }
-
-
-
 
     @Override
     public void onBackPressed() {

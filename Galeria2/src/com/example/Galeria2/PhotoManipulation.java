@@ -15,17 +15,21 @@ import android.widget.ImageView;
 import android.widget.Switch;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Random;
 
 /**
  * Created by Asia on 14.05.2015.
  */
 public class PhotoManipulation extends Activity{
 
+    Bitmap photo;
     File photoFile;
     Intent intent;
+    String ExternalStorageDirectoryPath, targetPath;
     static  final int REQUEST_TAKE_PHOTO=1;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +37,7 @@ public class PhotoManipulation extends Activity{
         setContentView(R.layout.photomanipulation);
 
         intent = getIntent();
-        Bitmap photo= (Bitmap) intent.getParcelableExtra("BitmapImage");
+        photo= (Bitmap) intent.getParcelableExtra("BitmapImage");
 
         ImageView pictureTaken = (ImageView) findViewById(R.id.photoView);
 
@@ -44,41 +48,40 @@ public class PhotoManipulation extends Activity{
     }
 
 
-    public void onClick(View view) throws IOException {
+    public void onClick(View view) {
 
         if (view.getId() == R.id.save) {
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-
-            }
-
-            if (photoFile != null) {
-                intent.putExtra(MediaStore.EXTRA_OUTPUT,
-                        Uri.fromFile(photoFile));
-            }
-
-            finish();
+            SaveImage(photo);
         }
-        if(view.getId() == R.id.delete){
+
+        finish();
+
+        if (view.getId() == R.id.delete) {
             finish();
         }
     }
 
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat ("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
 
-        // Save a file: path for use with ACTION_VIEW intents
-        String mCurrentPhotoPath = "file:" + image.getAbsolutePath();
-        return image;
+    private void SaveImage(Bitmap finalBitmap) {
+
+        String root = Environment.getExternalStorageDirectory().toString();
+        File myDir = new File(root + "/DCIM/Test");
+        myDir.mkdirs();
+        Random generator = new Random();
+        int n = 10000;
+        n = generator.nextInt(n);
+        String timeStamp = new SimpleDateFormat ("yyyyMMdd_HHmmss").format(new Date());
+        String fname = "Image-"+ timeStamp +".jpg";
+        File file = new File (myDir, fname);
+        if (file.exists ()) file.delete ();
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+            out.flush();
+            out.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

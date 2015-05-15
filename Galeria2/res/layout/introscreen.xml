@@ -4,37 +4,35 @@
     android:background="#ffffffff">
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="100dp"
         android:text="  Enter Gallery   "
         android:id="@+id/gallery"
         android:background="@drawable/buttonlayout"
         android:textColor="#000033"
+        android:onClick="onClick"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="116dp"
-        android:onClick="onClick"/>
+        android:layout_alignParentLeft="true"/>
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="100dp"
         android:text="  Draw    "
         android:id="@+id/draw"
         android:background="@drawable/buttonlayout"
         android:textColor="#000033"
+        android:onClick="onClick"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:onClick="onClick"/>
+        android:layout_alignParentLeft="true"/>
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="100dp"
         android:text="  Take picture    "
         android:id="@+id/photo"
         android:background="@drawable/buttonlayout"
         android:textColor="#000033"
+        android:onClick="onClick"
         android:layout_below="@+id/draw"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="68dp"
-        android:onClick="onClick"/>
+        android:layout_alignParentLeft="true"/>
 </RelativeLayout>

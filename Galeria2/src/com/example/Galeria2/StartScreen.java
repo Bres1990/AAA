@@ -1,7 +1,9 @@
 package com.example.Galeria2;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -18,9 +20,10 @@ import java.io.File;
 import java.util.Hashtable;
 
 
-public class StartScreen extends Activity {
+public class StartScreen extends Activity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final int CAMERA_REQUEST = 2345;
+    public SharedPreferences prefs;
 
 
     @Override
@@ -46,6 +49,11 @@ public class StartScreen extends Activity {
             }
         }
 
+        prefs = this.getSharedPreferences(
+                "com.example.app", Context.MODE_PRIVATE);
+
+        setPrefs();
+
         //Typeface menuFont=Typeface.createFromAsset(getAssets(), "fonts/cambria.ttf");
     if(menuFont!=null) {
         Button gallery = (Button) findViewById(R.id.gallery);
@@ -57,6 +65,16 @@ public class StartScreen extends Activity {
         Button takePhoto = (Button) findViewById(R.id.photo);
         gallery.setTypeface(menuFont);
     }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setPrefs();
+    }
+
+    private void setPrefs() {
+
     }
 
 
@@ -104,5 +122,20 @@ public class StartScreen extends Activity {
             selectedIntent.putExtra("BitmapImage", photo);
             StartScreen.this.startActivity(selectedIntent);
         }
+    }
+
+    /**
+     * Called when a shared preference is changed, added, or removed. This
+     * may be called even if a preference is set to its existing value.
+     * <p/>
+     * <p>This callback will be run on your main thread.
+     *
+     * @param sharedPreferences The {@link android.content.SharedPreferences} that received
+     *                          the change.
+     * @param key               The key of the preference that was changed, added, or
+     */
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+
     }
 }
