@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
@@ -169,8 +170,8 @@ public class MainActivity extends Activity {
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
             itemList.remove(itemList.get(position));
-            //getContentResolver().delete(uri, null, null)
-            //File file = new File(itemList.get(position));
+            //getContentResolver().delete(Uri.fromFile(files.), null, null);
+            //File file = new File(itemList.get(position), );
             //file.delete();
             myImageAdapter.notifyDataSetChanged();
             return false;
