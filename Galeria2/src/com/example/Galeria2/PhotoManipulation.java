@@ -51,7 +51,7 @@ public class PhotoManipulation extends Activity{
     public void onClick(View view) {
 
         if (view.getId() == R.id.save) {
-            SaveImage(photo);
+            Image.SaveImage(photo);
         }
 
         finish();

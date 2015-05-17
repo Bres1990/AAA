@@ -59,16 +59,34 @@ public class Image {
     /**
      * Method saving an image in a predefined directory
      * @param finalBitmap -- bitmap of an image to save
+     * @param photo_directory -- directory for the photo to be saved at
      */
-    private void SaveImage(Bitmap finalBitmap) {
+    public static void SaveImageAtDirectory(Bitmap finalBitmap, String photo_directory) {
 
         String root = Environment.getExternalStorageDirectory().toString();
-        String photo_directory = "/DCIM/Test";
         File myDir = new File(root + photo_directory);
         myDir.mkdirs();
-        Random generator = new Random();
-        int n = 10000;
-        n = generator.nextInt(n);
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String fname = "Image-"+ timeStamp +".jpg";
+        File file = new File (myDir, fname);
+        if (file.exists ()) file.delete ();
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+            out.flush();
+            out.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void SaveImage(Bitmap finalBitmap) {
+
+        String root = Environment.getExternalStorageDirectory().toString();
+        String photo_directory = "/DCIM/100ANDRO";
+        File myDir = new File(root + photo_directory);
+        myDir.mkdirs();
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String fname = "Image-"+ timeStamp +".jpg";
         File file = new File (myDir, fname);
