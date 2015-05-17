@@ -3,12 +3,14 @@ package com.example.Galeria2;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Path;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -31,17 +33,25 @@ public class PhotoManipulation extends Activity{
     Intent intent;
     String ExternalStorageDirectoryPath, targetPath;
     static  final int REQUEST_TAKE_PHOTO=1;
+    private String URI;
+    private File newPicture;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.photomanipulation);
 
         intent = getIntent();
-        photo= (Bitmap) intent.getParcelableExtra("BitmapImage");
+       // intent.getData()
+       // photo= (Bitmap) intent.getParcelableExtra("BitmapImage");
 
         ImageView pictureTaken = (ImageView) findViewById(R.id.photoView);
 
-        pictureTaken.setImageBitmap(photo);
+        //pictureTaken.setImageBitmap(photo);
+        URI = intent.getStringExtra("URI");
+        newPicture = new File(Environment.getExternalStorageDirectory()+URI);
+        Bitmap image = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory() + URI);
+
+        pictureTaken.setImageBitmap(image);
 
         Button save = (Button) findViewById(R.id.save);
         Button delete = (Button) findViewById(R.id.delete);
@@ -51,12 +61,17 @@ public class PhotoManipulation extends Activity{
     public void onClick(View view) {
 
         if (view.getId() == R.id.save) {
-            Image.SaveImage(photo);
+//            Image.SaveImage(photo);
         }
 
         finish();
 
         if (view.getId() == R.id.delete) {
+
+            boolean deleted = newPicture.delete();
+
+            Log.i("DeleteFile", ""+deleted);
+
             finish();
         }
     }
@@ -64,7 +79,7 @@ public class PhotoManipulation extends Activity{
 
     private void SaveImage(Bitmap finalBitmap) {
 
-        String root = Environment.getExternalStorageDirectory().toString();
+       /* String root = Environment.getExternalStorageDirectory().toString();
         File myDir = new File(root + "/DCIM/Test");
         myDir.mkdirs();
         Random generator = new Random();
@@ -82,6 +97,7 @@ public class PhotoManipulation extends Activity{
 
         } catch (Exception e) {
             e.printStackTrace();
-        }
+
+        } */
     }
 }

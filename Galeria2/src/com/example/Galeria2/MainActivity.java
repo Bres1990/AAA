@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
@@ -169,6 +170,16 @@ public class MainActivity extends Activity {
     OnItemLongClickListener myOnItemLongClickListener = new OnItemLongClickListener() {
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+            File file = new File(itemList.get(position));
+            Log.i("OnLongClickRemoval", file.getAbsolutePath());
+            boolean deleted = file.delete();
+            Log.i("OnLongClickRemoval", "DELETED: "+deleted);
+
+            /* Inform MediaScannerConnector that this file is absent */
+            sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
+                    + Environment.getExternalStorageDirectory())));
+
             itemList.remove(itemList.get(position));
             //getContentResolver().delete(Uri.fromFile(files.), null, null);
             //File file = new File(itemList.get(position), );

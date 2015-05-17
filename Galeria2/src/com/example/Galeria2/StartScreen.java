@@ -6,8 +6,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +20,8 @@ import android.widget.Toast;
 import com.example.Galeria2.PhotoManipulation;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Hashtable;
 
 
@@ -24,7 +29,7 @@ public class StartScreen extends Activity implements SharedPreferences.OnSharedP
 
     private static final int CAMERA_REQUEST = 2345;
     public SharedPreferences prefs;
-
+    private String outputURI;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,8 +108,45 @@ public class StartScreen extends Activity implements SharedPreferences.OnSharedP
         opens camera
          */
         if (view.getId() == R.id.photo){
-            Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-            startActivityForResult(cameraIntent, CAMERA_REQUEST);
+            //camera stuff
+            Intent imageIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+
+            Log.i("CreateDir",Environment.getExternalStorageDirectory().getAbsolutePath());
+
+            //folder stuff
+            File imagesFolder = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+"DCIM"+File.separator+"Test");
+            //imagesFolder.mkdirs();
+
+            if(!imagesFolder.exists() && !imagesFolder.isDirectory())
+            {
+                // create empty directory
+                if (imagesFolder.mkdirs())
+                {
+                    Log.i("CreateDir","App dir created");
+                }
+                else
+                {
+                    Log.w("CreateDir","Unable to create app dir!");
+                }
+            }
+            else
+            {
+                Log.i("CreateDir","App dir already exists");
+            }
+
+            /* MediaScannerConnection indexes the file */
+            sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
+                    + Environment.getExternalStorageDirectory())));
+            /* done */
+            outputURI = "QR_" + timeStamp + ".jpg";
+
+            File image = new File(imagesFolder, outputURI);
+            Uri uriSavedImage = Uri.fromFile(image);
+
+            outputURI= "/DCIM/Test/"+outputURI;
+            imageIntent.putExtra(MediaStore.EXTRA_OUTPUT, uriSavedImage);
+            startActivityForResult(imageIntent, CAMERA_REQUEST);
         }
     }
 
@@ -117,9 +159,9 @@ public class StartScreen extends Activity implements SharedPreferences.OnSharedP
 
         if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK) {
             //osobna activity na wyswietlanie zdjecia?
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
+//            Bitmap photo = (Bitmap) data.getExtras().get("data");
             Intent selectedIntent = new Intent(StartScreen.this, PhotoManipulation.class);
-            selectedIntent.putExtra("BitmapImage", photo);
+            selectedIntent.putExtra("URI", outputURI);
             StartScreen.this.startActivity(selectedIntent);
         }
     }
