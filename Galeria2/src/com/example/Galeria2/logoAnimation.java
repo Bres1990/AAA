@@ -44,6 +44,9 @@ public class logoAnimation extends Activity {
         imageBoard.setImageDrawable(crossfader);
 
         crossfader.startTransition(3000);
+
+        Intent intent=new Intent(logoAnimation.this, StartScreen.class);
+        logoAnimation.this.startActivity(intent);
          */
 
     }
