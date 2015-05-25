@@ -6,6 +6,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import java.util.ArrayList;
+
 /**
  * Custom view that can be drawn on. Uses touch detection.
  * @author Ala
@@ -52,6 +54,16 @@ public class DrawingView extends View {
     private Canvas drawingCanvas;
 
     /**
+     * List of drawn shapes
+     */
+    private ArrayList<Shape> shapes;
+
+    /**
+     *  Current stroke;
+     */
+    private Shape stroke;
+
+    /**
      * Basic constructor
      * @param context Activity or fragment this view is nested in. (handled by AndroidOS)
      * @param attrs A collection of attributes, associated with a tag inside XML document (this is the way this view is embedded).
@@ -63,6 +75,19 @@ public class DrawingView extends View {
 
         myPaint = new Paint();
         myPath = new Path();
+
+        shapes=new ArrayList<Shape>();
+
+
+        myPaint.setAntiAlias(true);
+        myPaint.setDither(true);
+        myPaint.setStrokeJoin(Paint.Join.ROUND);
+        myPaint.setStyle(Paint.Style.STROKE);
+        myPaint.setStrokeCap(Paint.Cap.ROUND);
+        myPaint.setStrokeWidth(20);
+
+        myPaint.setColor(Color.BLUE);
+
     }
 
     /**
@@ -79,19 +104,15 @@ public class DrawingView extends View {
         /* Set paint params */
         /* TODO: Get params from toolbar fragment */
 
-        myPaint.setAntiAlias(true);
-        myPaint.setDither(true);
-        myPaint.setStrokeJoin(Paint.Join.ROUND);
-        myPaint.setStyle(Paint.Style.STROKE);
-        myPaint.setStrokeCap(Paint.Cap.ROUND);
-        myPaint.setStrokeWidth(20);
-
-        myPaint.setColor(Color.BLUE);
-
-        canvas.drawBitmap(drawing, 0, 0, myPaint);
-
         if(myPath!=null){
             canvas.drawPath(myPath, myPaint);
+        }
+
+       // canvas.drawBitmap(drawing, 0, 0, myPaint);
+        for(Shape s: shapes){
+           if(s.getPath()!=null){
+               canvas.drawPath(s.getPath(), s.getPaint());
+           }
         }
     }
 
@@ -138,8 +159,12 @@ public class DrawingView extends View {
 
             case MotionEvent.ACTION_UP:
                 /* User stopped touching the screen */
+
                 myPath.lineTo(newBrushX, newBrushY);
-                drawingCanvas.drawPath(myPath, myPaint);
+                stroke.setPath(myPath);
+                shapes.add(stroke);
+                //drawingCanvas.drawPath(myPath, myPaint);
+                //TODO: Use this method to load photos
                 invalidate();
                 break;
 
@@ -156,6 +181,9 @@ public class DrawingView extends View {
     private void startPath(float x, float y){
         /* Clear path */
         myPath.reset();
+
+        /* Create new shape */
+        stroke = new Shape(myPaint);
 
         /* Save coordinates (we'll use them when user will move) */
         brushX = x;
@@ -179,5 +207,12 @@ public class DrawingView extends View {
         }
     }
 
+    public void backButtonPressed(){
+        if(!shapes.isEmpty()){
+            shapes.remove(shapes.size() - 1);
+            myPath.reset();
+            invalidate();
+        }
+    }
 
 }

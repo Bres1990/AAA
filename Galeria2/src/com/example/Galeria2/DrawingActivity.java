@@ -2,6 +2,11 @@ package com.example.Galeria2;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.* ;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentManager;
+
 
 /**
  * Drawing activity is a simple container activity. It works differently when phone orientation changes.
@@ -16,10 +21,22 @@ import android.os.Bundle;
  * @since 08-05-2015
  *
  */
-public class DrawingActivity extends Activity {
+public class DrawingActivity extends FragmentActivity {
+
+    DrawingFragment drawing;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drawingactivity);
+
+        FragmentManager manager = getSupportFragmentManager();
+        drawing = (DrawingFragment) manager.findFragmentById(R.id.drawingFragment);
+    }
+
+    @Override
+    public void onBackPressed() {
+        drawing.passBackButton();
+
     }
 }
