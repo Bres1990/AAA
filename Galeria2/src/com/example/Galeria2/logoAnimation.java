@@ -65,6 +65,7 @@ public class logoAnimation extends Activity {
                 }
             }
 
+            
             public void onAnimationEnd(Animation animation) {
                 if(imageIndex==images.length-1)
                     startActivity(new Intent(logoAnimation.this, StartScreen.class));}
