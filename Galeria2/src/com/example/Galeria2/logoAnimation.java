@@ -24,10 +24,28 @@ public class logoAnimation extends Activity {
 
         ImageView imageBoard = (ImageView) findViewById(R.id.animationView);
 
-        //obrazki dorzuce po polnocy
+        //xxx
         int imagesToShow[] = {R.drawable.szkic1, R.drawable.szkic2, R.drawable.szkic3, R.drawable.owl};//, R.drawable.owlFont};
 
+        //xxx
         animate(imageBoard, imagesToShow, 0);
+
+        //alternatywnie po zakomentowaniu całego animate i tego nad czym jest //xxx
+        /*
+        Drawable backgrounds[] = new Drawable[4];
+        Resources res = getResources();
+        backgrounds[0] = res.getDrawable(android.R.drawable.szkic1);
+        backgrounds[1] = res.getDrawable(android.R.drawable.szkic2);
+        backgrounds[2] = res.getDrawable(android.R.drawable.szkic3);
+        backgrounds[3] = res.getDrawable(android.R.drawable.owl);
+
+        TransitionDrawable fading = new TransitionDrawable(backgrounds);
+
+        imageBoard.setImageDrawable(crossfader);
+
+        crossfader.startTransition(3000);
+         */
+
     }
 
     private void animate(final ImageView imageView, final int images[], final int imageIndex) {
@@ -65,10 +83,13 @@ public class logoAnimation extends Activity {
                 }
             }
 
-            
+
             public void onAnimationEnd(Animation animation) {
-                if(imageIndex==images.length-1)
-                    startActivity(new Intent(logoAnimation.this, StartScreen.class));}
+                if (imageIndex == images.length - 1) {
+                    Intent intent=new Intent(logoAnimation.this, StartScreen.class);
+                    logoAnimation.this.startActivity(intent);
+                }
+            }
         });
     }
 }
