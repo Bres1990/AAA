@@ -25,11 +25,10 @@ public class logoAnimation extends Activity {
         ImageView imageBoard = (ImageView) findViewById(R.id.animationView);
 
         //obrazki dorzuce po polnocy
-        int imagesToShow[] = {R.drawable.sketch1, R.drawable.sketch2, R.drawable.sketch3, R.drawable.owl, R.drawable.owlFont};
+        int imagesToShow[] = {R.drawable.szkic1, R.drawable.szkic2, R.drawable.szkic3, R.drawable.owl};//, R.drawable.owlFont};
 
         animate(imageBoard, imagesToShow, 0);
     }
-
 
     private void animate(final ImageView imageView, final int images[], final int imageIndex) {
 
@@ -57,17 +56,18 @@ public class logoAnimation extends Activity {
         imageView.setAnimation(animation);
 
         animation.setAnimationListener(new Animation.AnimationListener() {
-            public void onAnimationEnd(Animation animation) {
-
-                //show all images, and after let us go to the menu activity
-                while (images.length - 1 > imageIndex) {
-                    animate(imageView, images, imageIndex + 1);
-                }
-                startActivity(new Intent(logoAnimation.this, StartScreen.class));}
 
             public void onAnimationRepeat(Animation animation) {}
 
-            public void onAnimationStart(Animation animation) {}
+            public void onAnimationStart(Animation animation) {
+                while (images.length - 1 > imageIndex) {
+                    animate(imageView, images, imageIndex + 1);
+                }
+            }
+
+            public void onAnimationEnd(Animation animation) {
+                if(imageIndex==images.length-1)
+                    startActivity(new Intent(logoAnimation.this, StartScreen.class));}
         });
     }
 }
