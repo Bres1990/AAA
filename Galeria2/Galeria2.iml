@@ -18,6 +18,7 @@
     <orderEntry type="module" module-name="main" />
     <orderEntry type="library" name="android-support-v4" level="project" />
     <orderEntry type="library" name="src" level="project" />
+    <orderEntry type="library" name="google-play-services" level="project" />
   </component>
 </module>
 

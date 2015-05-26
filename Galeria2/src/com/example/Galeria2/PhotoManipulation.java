@@ -15,6 +15,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Switch;
+import android.widget.Toast;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -35,6 +37,8 @@ public class PhotoManipulation extends Activity{
     static  final int REQUEST_TAKE_PHOTO=1;
     private String URI;
     private File newPicture;
+
+    LatLng imagePosition;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +65,8 @@ public class PhotoManipulation extends Activity{
     public void onClick(View view) {
 
         if (view.getId() == R.id.save) {
-//            Image.SaveImage(photo);
+            imagePosition = Image.LocateImage(getApplicationContext());
+            Toast.makeText(getApplicationContext(), imagePosition.toString(), Toast.LENGTH_LONG).show();
         }
 
         finish();
@@ -76,28 +81,4 @@ public class PhotoManipulation extends Activity{
         }
     }
 
-
-    private void SaveImage(Bitmap finalBitmap) {
-
-       /* String root = Environment.getExternalStorageDirectory().toString();
-        File myDir = new File(root + "/DCIM/Test");
-        myDir.mkdirs();
-        Random generator = new Random();
-        int n = 10000;
-        n = generator.nextInt(n);
-        String timeStamp = new SimpleDateFormat ("yyyyMMdd_HHmmss").format(new Date());
-        String fname = "Image-"+ timeStamp +".jpg";
-        File file = new File (myDir, fname);
-        if (file.exists ()) file.delete ();
-        try {
-            FileOutputStream out = new FileOutputStream(file);
-            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
-            out.flush();
-            out.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-
-        } */
-    }
 }
