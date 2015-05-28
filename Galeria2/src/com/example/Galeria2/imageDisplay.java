@@ -3,11 +3,19 @@ package com.example.Galeria2;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.*;
 import android.widget.*;
+import com.example.Galeria2.DatabaseAdapter;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.polites.android.GestureImageView;
 
 import java.util.Date;
@@ -19,16 +27,21 @@ import java.util.Date;
  * @author Adam
  * @since 08-05-2015
  */
-public class imageDisplay extends Activity implements ActionBar.OnNavigationListener {
+public class imageDisplay extends Activity implements ActionBar.OnNavigationListener, OnMapReadyCallback {
     ImageView image;
     Intent mainIntent;
-    Dialog ratingDialog;
+    Dialog ratingDialog, mapDialog;
     RatingBar ratingBar;
     String name;
     Float userRankValue;
     Integer filePosition;
     Boolean saved;
     Bundle imageState;
+    MapFragment mMapFragment;
+    GoogleMap googleMap;
+    LatLng imageLocation;
+    DatabaseAdapter myDatabaseAdapter;
+    ImageTask currentImage;
 
     @Override
     public void onCreate(Bundle outState) {
@@ -53,6 +66,10 @@ public class imageDisplay extends Activity implements ActionBar.OnNavigationList
         Uri imageURI = Uri.parse(getIntent().getStringExtra("ImageURI"));
         image.setImageURI(imageURI);
 
+        String uriString = imageURI.toString();
+
+        currentImage = myDatabaseAdapter.getImageByAddress(uriString);
+
         view.setLayoutParams(params);
 
         mainIntent = new Intent();
@@ -68,9 +85,6 @@ public class imageDisplay extends Activity implements ActionBar.OnNavigationList
         mainIntent.putExtra("userRankValue2", userRankValue);
         mainIntent.putExtra("filePosition2", filePosition);
         mainIntent.putExtra("saved2", true);
-        //imageState.putFloat("userRankValue2", userRankValue);
-        //imageState.putInt("filePosition2", filePosition);
-        //imageState.putBoolean("saved2", true);
         mainIntent.putExtra("imageState", imageState);
 
         setResult(Activity.RESULT_OK, mainIntent);
@@ -132,6 +146,8 @@ public class imageDisplay extends Activity implements ActionBar.OnNavigationList
                     @Override
                     public void onClick(View v) {
                         userRankValue = ratingBar.getRating();
+                        currentImage.setRating(userRankValue);
+                        myDatabaseAdapter.updateImage(currentImage);
                         ratingDialog.dismiss();
                     }
                 });
@@ -146,10 +162,38 @@ public class imageDisplay extends Activity implements ActionBar.OnNavigationList
                 return true;
             case R.id.locating_item:
 
-                //RETURN IMAGE LOCATION
-                Toast.makeText(getApplicationContext(), "Localization stub", Toast.LENGTH_LONG).show();
+                if (currentImage.getName().contains("QR")) {
+                    mapDialog = new Dialog(this);
+                    mapDialog.setContentView(R.layout.mapdialog);
+                    mapDialog.setCancelable(true);
+
+                    mMapFragment = MapFragment.newInstance();
+                    FragmentTransaction fragmentTransaction =
+                            getFragmentManager().beginTransaction();
+                    fragmentTransaction.add(R.id.frameLayout, mMapFragment);
+                    fragmentTransaction.commit();
+                    mMapFragment.getMapAsync(this);
+                    googleMap = mMapFragment.getMap();
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "Impossible!", Toast.LENGTH_LONG).show();
+                }
+
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        imageLocation = new LatLng(currentImage.getLatitude(), currentImage.getLongitude());
+        googleMap.setMyLocationEnabled(true);
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(imageLocation, 13));
+
+        googleMap.addMarker(new MarkerOptions()
+                .title("Wroclaw")
+                        //.snippet("The coolest city in Wroclaw.")
+                .position(imageLocation));
+    }
+
 }

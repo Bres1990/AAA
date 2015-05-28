@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
+import com.example.Galeria2.DatabaseAdapter;
 
 /**
  * Created by Asia on 14.05.2015.
@@ -39,6 +40,9 @@ public class PhotoManipulation extends Activity{
     private File newPicture;
 
     LatLng imagePosition;
+
+    DatabaseAdapter myDatabaseAdapter;
+    ImageTask currentImage;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +63,8 @@ public class PhotoManipulation extends Activity{
 
         Button save = (Button) findViewById(R.id.save);
         Button delete = (Button) findViewById(R.id.delete);
+
+        currentImage = myDatabaseAdapter.getImageByAddress(URI);
     }
 
 
@@ -66,8 +72,11 @@ public class PhotoManipulation extends Activity{
 
         if (view.getId() == R.id.save) {
             imagePosition = Image.LocateImage(getApplicationContext());
+            currentImage.setLatitude(imagePosition.latitude);
+            currentImage.setLongitude(imagePosition.longitude);
             Toast.makeText(getApplicationContext(), imagePosition.toString(), Toast.LENGTH_LONG).show();
         }
+        myDatabaseAdapter.updateImage(currentImage);
 
         finish();
 

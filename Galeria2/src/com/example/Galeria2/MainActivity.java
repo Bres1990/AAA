@@ -31,6 +31,7 @@ public class MainActivity extends Activity {
     ImageView imageView;
     GridView gridview;
     ImageAdapter myImageAdapter;
+    DatabaseAdapter myDatabaseAdapter;
     String ExternalStorageDirectoryPath, fileName, imageURI, targetPath;
     File[] files;
     File f, targetDirector;
@@ -231,9 +232,6 @@ public class MainActivity extends Activity {
             }
 
             itemList.remove(itemList.get(position));
-            //getContentResolver().delete(Uri.fromFile(files.), null, null);
-            //File file = new File(itemList.get(position), );
-            //file.delete();
             myImageAdapter.notifyDataSetChanged();
             return false;
         }
@@ -246,12 +244,11 @@ public class MainActivity extends Activity {
     public void onCreate(Bundle mainState) {
         super.onCreate(mainState);
         setContentView(R.layout.main);
-        
-
-        System.out.println("BLABLABLABLABLABLA!!!!!");
 
         gridview = (GridView) findViewById(R.id.gridview);
-        myImageAdapter = new ImageAdapter(this);
+        myImageAdapter = new ImageAdapter(getApplicationContext());
+        myDatabaseAdapter = new DatabaseAdapter(getApplicationContext());
+        myDatabaseAdapter.open();
         gridview.setAdapter(myImageAdapter);
 
         ExternalStorageDirectoryPath = Environment

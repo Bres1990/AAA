@@ -33,8 +33,8 @@ public class DatabaseAdapter {
     public static final String NAME_OPTIONS = "TEXT NOT NULL PRIMARY KEY";
     public static final String ADDRESS_OPTIONS = "TEXT NOT NULL";
     public static final String RATING_OPTIONS = "FLOAT DEFAULT 0.0";
-    public static final String LATITUDE_OPTIONS = "FLOAT";
-    public static final String LONGITUDE_OPTIONS = "FLOAT";
+    public static final String LATITUDE_OPTIONS = "DOUBLE";
+    public static final String LONGITUDE_OPTIONS = "DOUBLE";
 
     public static final int NAME_COLUMN = 0;
     public static final int ADDRESS_COLUMN = 1;
@@ -135,7 +135,7 @@ public class DatabaseAdapter {
         dbHelper.close();
     }
 
-    public long insertImage(String name, String address, Float latitude, Float longitude) {
+    public long insertImage(String name, String address, Double latitude, Double longitude) {
         ContentValues newImageValues = new ContentValues();
         newImageValues.put(KEY_NAME, name);
         newImageValues.put(KEY_ADDRESS, address);
@@ -149,13 +149,13 @@ public class DatabaseAdapter {
         String name = task.getName();
         String address = task.getAddress();
         Float rating = task.getRating();
-        Float latitude = task.getLatitude();
-        Float longitude = task.getLongitude();
+        Double latitude = task.getLatitude();
+        Double longitude = task.getLongitude();
 
         return updateImage(name, address, rating, latitude, longitude);
     }
 
-    public boolean updateImage(String name, String address, Float rating, Float latitude, Float longitude) {
+    public boolean updateImage(String name, String address, Float rating, Double latitude, Double longitude) {
         String where = KEY_NAME + " = " + name;
         ContentValues updateImageValues = new ContentValues();
         updateImageValues.put(KEY_NAME, name);
@@ -179,7 +179,7 @@ public class DatabaseAdapter {
         return db.query(DB_IMAGE_TABLE, columns, null, null, null, null, null);
     }
 
-    public ImageTask getImage(String name) {
+    public ImageTask getImageByName(String name) {
         String[] columns = {KEY_NAME, KEY_ADDRESS, KEY_RATING, KEY_LATITUDE, KEY_LONGITUDE};
         String where = KEY_NAME + " = " + name;
         Cursor cursor = db.query(DB_IMAGE_TABLE, columns, where, null, null, null, null);
@@ -187,16 +187,15 @@ public class DatabaseAdapter {
         if (cursor != null && cursor.moveToFirst()) {
             String address = cursor.getString(ADDRESS_COLUMN);
             Float rating = cursor.getFloat(RATING_COLUMN);
-            Float latitude = cursor.getFloat(LATITUDE_COLUMN);
-            Float longitude = cursor.getFloat(LONGITUDE_COLUMN);
+            Double latitude = cursor.getDouble(LATITUDE_COLUMN);
+            Double longitude = cursor.getDouble(LONGITUDE_COLUMN);
             task = new ImageTask(name, address, rating, latitude, longitude);
         }
 
         return task;
     }
 
-    //TODO ==> Nie moga byc wlaczone obie metody getImage(String) jednoczesnie. Po czym chcemy pobierac zdjecia?
-    /*public ImageTask getImage(String address) {
+    public ImageTask getImageByAddress(String address) {
         String[] columns = {KEY_NAME, KEY_ADDRESS, KEY_RATING, KEY_LATITUDE, KEY_LONGITUDE};
         String where = KEY_ADDRESS + " = " + address;
         Cursor cursor = db.query(DB_IMAGE_TABLE, columns, where, null, null, null, null);
@@ -204,11 +203,11 @@ public class DatabaseAdapter {
         if (cursor != null && cursor.moveToFirst()) {
             String name = cursor.getString(NAME_COLUMN);
             Float rating = cursor.getFloat(RATING_COLUMN);
-            Float latitude = cursor.getFloat(LATITUDE_COLUMN);
-            Float longitude = cursor.getFloat(LONGITUDE_COLUMN);
+            Double latitude = cursor.getDouble(LATITUDE_COLUMN);
+            Double longitude = cursor.getDouble(LONGITUDE_COLUMN);
             task = new ImageTask(name, address, rating, latitude, longitude);
         }
 
         return task;
-    }*/
+    }
 }

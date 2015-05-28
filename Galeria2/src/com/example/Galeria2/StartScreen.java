@@ -31,6 +31,7 @@ public class StartScreen extends Activity implements SharedPreferences.OnSharedP
     private static final int CAMERA_REQUEST = 2345;
     public SharedPreferences prefs;
     private String outputURI;
+    DatabaseAdapter myDatabaseAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +55,9 @@ public class StartScreen extends Activity implements SharedPreferences.OnSharedP
                 }
             }
         }
+
+        myDatabaseAdapter = new DatabaseAdapter(getApplicationContext());
+        myDatabaseAdapter.open();
 
         prefs = this.getSharedPreferences(
                 "com.example.app", Context.MODE_PRIVATE);
@@ -153,10 +157,15 @@ public class StartScreen extends Activity implements SharedPreferences.OnSharedP
             /* done */
             outputURI = "QR_" + timeStamp + ".jpg";
 
+            String name = outputURI;
+
             File image = new File(imagesFolder, outputURI);
             Uri uriSavedImage = Uri.fromFile(image);
 
             outputURI= "/DCIM/Test/"+outputURI;
+
+            myDatabaseAdapter.insertImage(name, outputURI, null, null);
+
             imageIntent.putExtra(MediaStore.EXTRA_OUTPUT, uriSavedImage);
             startActivityForResult(imageIntent, CAMERA_REQUEST);
         }
