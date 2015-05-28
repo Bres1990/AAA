@@ -79,4 +79,4 @@ proguard/
 ### PhoneGap ###
 # Libraries
 platforms/
-plugins/ 
+plugins/

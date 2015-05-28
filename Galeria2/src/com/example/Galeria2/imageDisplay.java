@@ -145,6 +145,8 @@ public class imageDisplay extends Activity implements ActionBar.OnNavigationList
 
                 return true;
             case R.id.locating_item:
+
+                //RETURN IMAGE LOCATION
                 Toast.makeText(getApplicationContext(), "Localization stub", Toast.LENGTH_LONG).show();
                 return true;
         }
