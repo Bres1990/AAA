@@ -2,10 +2,15 @@ package com.example.Galeria2;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.app.Dialog;
+import android.content.Context;
 import android.support.v4.app.* ;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentManager;
+import android.content.Intent;
+
+import java.awt.*;
 
 
 /**
@@ -21,14 +26,19 @@ import android.support.v4.app.FragmentManager;
  * @since 08-05-2015
  *
  */
-public class DrawingActivity extends FragmentActivity {
+public class DrawingActivity extends FragmentActivity implements ActionBar {
 
     DrawingFragment drawing;
+    final Contex context = this;
+    Image image;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drawingactivity);
+
+        ActionBar drawingActionBar = getActionBar();
+        drawingActionBar.setTitle(getIntent().getStringExtra("fileName"));
 
         FragmentManager manager = getSupportFragmentManager();
         drawing = (DrawingFragment) manager.findFragmentById(R.id.drawingFragment);
@@ -39,4 +49,68 @@ public class DrawingActivity extends FragmentActivity {
         drawing.passBackButton();
 
     }
+
+    /*
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu items for use in the action bar
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.drawing_actions, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+            //jeśli ktoś wybrał toolbara to urucham
+            case R.id.toolbar: {
+
+                Intent intent=new Intent(DrawingActivity.this, ToolbarActivity.class);
+                DrawingActivity.this.startActivity(intent);
+
+                return true;}
+            //jesli chce zapisać, pokaż okienko z doborem nazwy
+            case R.id.save: {
+                final Dialog dialog = new Dialog(context);
+                dialog.setContentView(R.layout.dialog_layout);
+                TextView text = (TextView) dialog.findViewById(R.id.text);
+                text.setText("Choose directory");
+                EditText name = (EditText) dialog.findViewById(R.id.name);
+
+                image=new Image();
+                Button exButton = (Button) dialog.findViewById(R.id.dialogButtonE);
+                exButton.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String drawingName = name.getText();
+                        if(!drawingName.equals("")) {
+                            //skąd pobrać Bitmapę?
+                            //image.SaveImageAtDirectory(, drawingName);
+                        }
+                        dialog.dismiss();
+                    }
+                });
+
+                Button insButton = (Button) dialog.findViewById(R.id.dialogButtonI);
+                // if button is clicked, close the custom dialog
+                insButton.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //image.SaveImage();
+                        dialog.dismiss();
+                    }
+                });
+
+                return true;}
+            default:
+                return super.onOptionsItemSelected(item);
+
+
+            dialog.show();
+        }
+    }
+
+    */
 }
