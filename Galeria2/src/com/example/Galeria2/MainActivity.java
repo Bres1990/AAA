@@ -1,6 +1,7 @@
 package com.example.Galeria2;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.Service;
 import android.content.Context;
@@ -8,15 +9,18 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.util.LruCache;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import static android.widget.AdapterView.*;
@@ -91,7 +95,15 @@ public class MainActivity extends Activity {
 
 
 
-            Bitmap bm = decodeSampledBitmapFromUri(itemList.get(position), 220, 220);
+            //Bitmap bm = decodeSampledBitmapFromUri(itemList.get(position), 220, 220);
+            //Use the path as the key to LruCache
+            final String imageKey = itemList.get(position);
+            final Bitmap bm = getBitmapFromMemCache(imageKey);
+
+            if (bm == null) {
+                BitmapWorkerTask task = new BitmapWorkerTask(imageView);
+                task.execute(imageKey);
+            }
 
             imageView.setImageBitmap(bm);
             return imageView;
@@ -132,6 +144,33 @@ public class MainActivity extends Activity {
             }
 
             return inSampleSize;
+        }
+
+        class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
+
+            private final WeakReference<ImageView> imageViewReference;
+
+            public BitmapWorkerTask(ImageView imageView) {
+                // Use a WeakReference to ensure the ImageView can be garbage collected
+                imageViewReference = new WeakReference<ImageView>(imageView);
+            }
+
+            @Override
+            protected Bitmap doInBackground(String... params) {
+                final Bitmap bitmap = decodeSampledBitmapFromUri(params[0], 200, 200);
+                addBitmapToMemoryCache(String.valueOf(params[0]), bitmap);
+                return bitmap;
+            }
+
+            @Override
+            protected void onPostExecute(Bitmap bitmap) {
+                if (imageViewReference != null && bitmap != null) {
+                    final ImageView imageView = (ImageView)imageViewReference.get();
+                    if (imageView != null) {
+                        imageView.setImageBitmap(bitmap);
+                    }
+                }
+            }
         }
 
     }
@@ -200,6 +239,8 @@ public class MainActivity extends Activity {
         }
     };
 
+    private LruCache<String, Bitmap> mMemoryCache;
+
 
     @Override
     public void onCreate(Bundle mainState) {
@@ -230,6 +271,25 @@ public class MainActivity extends Activity {
         catch (NullPointerException e) {
             e.printStackTrace();
         }
+
+        // Get memory class of this device, exceeding this amount will throw an
+        // OutOfMemory exception.
+        final int memClass
+                = ((ActivityManager)getSystemService(Context.ACTIVITY_SERVICE))
+                .getMemoryClass();
+
+        // Use 1/8th of the available memory for this memory cache.
+        final int cacheSize = 1024 * 1024 * memClass / 8;
+
+        mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
+
+            @Override
+            protected int sizeOf(String key, Bitmap bitmap) {
+                // The cache size will be measured in bytes rather than number of items.
+                return bitmap.getByteCount();
+            }
+        };
+
         bitmaps = new Bitmap[gridview.getChildCount()];
 
         gridview.setOnItemClickListener(myOnItemClickListener);
@@ -241,36 +301,15 @@ public class MainActivity extends Activity {
 
     }
 
-    @Override
-    public void onLowMemory() {
-
+    public void addBitmapToMemoryCache(String key, Bitmap bitmap) {
+        if (getBitmapFromMemCache(key) == null) {
+            mMemoryCache.put(key, bitmap);
+        }
     }
 
-
-    /*@Override
-    protected void onSaveInstanceState(Bundle outState) {
-
-        super.onSaveInstanceState(outState);
-            if (outState == null) {
-                outState = new Bundle();
-            }
-        imageIntent.putExtra("outState", outState);
-
-        }
-
-
-    @Override
-    protected void onRestoreInstanceState(Bundle mainState) {
-        super.onRestoreInstanceState(mainState);
-
-        userRankValue = getIntent().getFloatExtra("userRankValue2", 0);
-        filePosition = getIntent().getIntExtra("filePosition2", 0);
-        saved = getIntent().getBooleanExtra("saved2", false);
-
-        imageState = getIntent().getBundleExtra("imageState");
-    }*/
-
-
+    public Bitmap getBitmapFromMemCache(String key) {
+        return (Bitmap) mMemoryCache.get(key);
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent)
