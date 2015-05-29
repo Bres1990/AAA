@@ -40,7 +40,7 @@ public class imageDisplay extends Activity implements ActionBar.OnNavigationList
     MapFragment mMapFragment;
     GoogleMap googleMap;
     LatLng imageLocation;
-    DatabaseAdapter myDatabaseAdapter;
+    DatabaseAdapter myDatabaseAdapter = new DatabaseAdapter(this);
     ImageTask currentImage;
 
     @Override
@@ -68,6 +68,7 @@ public class imageDisplay extends Activity implements ActionBar.OnNavigationList
 
         String uriString = imageURI.toString();
 
+        myDatabaseAdapter.open();
         currentImage = myDatabaseAdapter.getImageByAddress(uriString);
 
         view.setLayoutParams(params);
@@ -162,7 +163,7 @@ public class imageDisplay extends Activity implements ActionBar.OnNavigationList
                 return true;
             case R.id.locating_item:
 
-                if (currentImage.getName().contains("QR")) {
+                if (currentImage.getName().contains("QR_")) {
                     mapDialog = new Dialog(this);
                     mapDialog.setContentView(R.layout.mapdialog);
                     mapDialog.setCancelable(true);

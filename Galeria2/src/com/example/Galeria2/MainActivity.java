@@ -31,7 +31,6 @@ public class MainActivity extends Activity {
     ImageView imageView;
     GridView gridview;
     ImageAdapter myImageAdapter;
-    DatabaseAdapter myDatabaseAdapter;
     String ExternalStorageDirectoryPath, fileName, imageURI, targetPath;
     File[] files;
     File f, targetDirector;
@@ -247,8 +246,8 @@ public class MainActivity extends Activity {
 
         gridview = (GridView) findViewById(R.id.gridview);
         myImageAdapter = new ImageAdapter(getApplicationContext());
-        myDatabaseAdapter = new DatabaseAdapter(getApplicationContext());
-        myDatabaseAdapter.open();
+
+
         gridview.setAdapter(myImageAdapter);
 
         ExternalStorageDirectoryPath = Environment

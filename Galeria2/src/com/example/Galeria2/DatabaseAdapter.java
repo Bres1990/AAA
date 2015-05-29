@@ -135,14 +135,15 @@ public class DatabaseAdapter {
         dbHelper.close();
     }
 
-    public long insertImage(String name, String address, Double latitude, Double longitude) {
+    public void insertImage(String name, String address, Double latitude, Double longitude) {
         ContentValues newImageValues = new ContentValues();
         newImageValues.put(KEY_NAME, name);
         newImageValues.put(KEY_ADDRESS, address);
         newImageValues.put(KEY_LATITUDE, latitude);
         newImageValues.put(KEY_LONGITUDE, longitude);
+        db.insert(DB_IMAGE_TABLE, null, newImageValues);
+        db.close();
 
-        return db.insert(DB_IMAGE_TABLE, null, newImageValues);
     }
 
     public boolean updateImage(ImageTask task) {
@@ -197,7 +198,7 @@ public class DatabaseAdapter {
 
     public ImageTask getImageByAddress(String address) {
         String[] columns = {KEY_NAME, KEY_ADDRESS, KEY_RATING, KEY_LATITUDE, KEY_LONGITUDE};
-        String where = KEY_ADDRESS + " = " + address;
+        String where = KEY_ADDRESS + " = \"" + address + "\"";
         Cursor cursor = db.query(DB_IMAGE_TABLE, columns, where, null, null, null, null);
         ImageTask task = null;
         if (cursor != null && cursor.moveToFirst()) {

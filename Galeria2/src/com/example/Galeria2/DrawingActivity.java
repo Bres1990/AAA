@@ -1,5 +1,6 @@
 package com.example.Galeria2;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
 import android.app.Dialog;
@@ -26,10 +27,10 @@ import java.awt.*;
  * @since 08-05-2015
  *
  */
-public class DrawingActivity extends FragmentActivity implements ActionBar {
+public class DrawingActivity extends FragmentActivity implements ActionBar.OnNavigationListener {
 
     DrawingFragment drawing;
-    final Contex context = this;
+    final Context context = this;
     Image image;
 
     @Override
@@ -48,6 +49,19 @@ public class DrawingActivity extends FragmentActivity implements ActionBar {
     public void onBackPressed() {
         drawing.passBackButton();
 
+    }
+
+    /**
+     * This method is called whenever a navigation item in your action bar
+     * is selected.
+     *
+     * @param itemPosition Position of the item clicked.
+     * @param itemId       ID of the item clicked.
+     * @return True if the event was handled, false otherwise.
+     */
+    @Override
+    public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+        return false;
     }
 
     /*

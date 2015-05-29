@@ -31,7 +31,7 @@ public class StartScreen extends Activity implements SharedPreferences.OnSharedP
     private static final int CAMERA_REQUEST = 2345;
     public SharedPreferences prefs;
     private String outputURI;
-    DatabaseAdapter myDatabaseAdapter;
+    DatabaseAdapter myDatabaseAdapter = new DatabaseAdapter(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

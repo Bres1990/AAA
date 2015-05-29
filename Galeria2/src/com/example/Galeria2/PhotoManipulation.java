@@ -41,7 +41,7 @@ public class PhotoManipulation extends Activity{
 
     LatLng imagePosition;
 
-    DatabaseAdapter myDatabaseAdapter;
+    DatabaseAdapter myDatabaseAdapter = new DatabaseAdapter(this);  //SharedPreferences?
     ImageTask currentImage;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +64,7 @@ public class PhotoManipulation extends Activity{
         Button save = (Button) findViewById(R.id.save);
         Button delete = (Button) findViewById(R.id.delete);
 
+        myDatabaseAdapter.open();
         currentImage = myDatabaseAdapter.getImageByAddress(URI);
     }
 
