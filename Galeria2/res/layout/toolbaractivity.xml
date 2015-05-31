@@ -5,20 +5,6 @@
 
     <view android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          class="com.example.Galeria2.ColorPickerView" android:id="@+id/colorWheel"
-          android:layout_marginBottom="50dp" android:layout_alignParentBottom="true"
+          class="com.example.Galeria2.ColorPickerView" android:id="@+id/view2" android:layout_alignParentTop="true"
           android:layout_centerHorizontal="true"/>
-    <SeekBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/seekBar"
-            android:max="30" android:indeterminate="false"
-            android:layout_alignBottom="@+id/textView" android:layout_alignParentRight="true"
-            android:layout_alignLeft="@+id/colorWheel"/>
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/size"
-            android:id="@+id/textView"
-            android:layout_centerVertical="true" android:layout_alignParentLeft="true"/>
 </RelativeLayout>
