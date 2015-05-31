@@ -1,17 +1,19 @@
 package com.example.Galeria2;
 
 import android.app.ActionBar;
-import android.app.Activity;
-import android.os.Bundle;
 import android.app.Dialog;
 import android.content.Context;
-import android.support.v4.app.* ;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.FragmentManager;
 import android.content.Intent;
-
-import java.awt.*;
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 
 /**
@@ -32,6 +34,7 @@ public class DrawingActivity extends FragmentActivity implements ActionBar.OnNav
     DrawingFragment drawing;
     final Context context = this;
     Image image;
+    Dialog dialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,7 +67,6 @@ public class DrawingActivity extends FragmentActivity implements ActionBar.OnNav
         return false;
     }
 
-    /*
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -87,18 +89,18 @@ public class DrawingActivity extends FragmentActivity implements ActionBar.OnNav
                 return true;}
             //jesli chce zapisać, pokaż okienko z doborem nazwy
             case R.id.save: {
-                final Dialog dialog = new Dialog(context);
+                dialog = new Dialog(context);
                 dialog.setContentView(R.layout.dialog_layout);
                 TextView text = (TextView) dialog.findViewById(R.id.text);
                 text.setText("Choose directory");
-                EditText name = (EditText) dialog.findViewById(R.id.name);
+                final EditText name = (EditText) dialog.findViewById(R.id.name);
 
                 image=new Image();
                 Button exButton = (Button) dialog.findViewById(R.id.dialogButtonE);
-                exButton.setOnClickListener(new OnClickListener() {
+                exButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String drawingName = name.getText();
+                        String drawingName = String.valueOf(name.getText());
                         if(!drawingName.equals("")) {
                             //skąd pobrać Bitmapę?
                             //image.SaveImageAtDirectory(, drawingName);
@@ -109,7 +111,7 @@ public class DrawingActivity extends FragmentActivity implements ActionBar.OnNav
 
                 Button insButton = (Button) dialog.findViewById(R.id.dialogButtonI);
                 // if button is clicked, close the custom dialog
-                insButton.setOnClickListener(new OnClickListener() {
+                insButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         //image.SaveImage();
@@ -122,9 +124,8 @@ public class DrawingActivity extends FragmentActivity implements ActionBar.OnNav
                 return super.onOptionsItemSelected(item);
 
 
-            dialog.show();
+            //dialog.show();
         }
     }
 
-    */
 }

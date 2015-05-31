@@ -9,7 +9,6 @@ import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Environment;
-
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.File;
@@ -17,7 +16,6 @@ import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 
 /**
