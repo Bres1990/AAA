@@ -89,7 +89,7 @@ public class Image {
     public static void SaveImage(Bitmap finalBitmap) {
 
         String root = Environment.getExternalStorageDirectory().toString();
-        String photo_directory = "/DCIM/100ANDRO";
+        String photo_directory = "/DCIM/Test";
         File myDir = new File(root + photo_directory);
         myDir.mkdirs();
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());

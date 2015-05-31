@@ -30,7 +30,7 @@ public class DatabaseAdapter {
     public static final String KEY_LATITUDE = "Latitude";
     public static final String KEY_LONGITUDE = "Longitude";
 
-    public static final String NAME_OPTIONS = "TEXT NOT NULL PRIMARY KEY";
+    public static final String NAME_OPTIONS = "TEXT NOT NULL";
     public static final String ADDRESS_OPTIONS = "TEXT NOT NULL";
     public static final String RATING_OPTIONS = "FLOAT DEFAULT 0.0";
     public static final String LATITUDE_OPTIONS = "DOUBLE";
@@ -142,7 +142,7 @@ public class DatabaseAdapter {
         newImageValues.put(KEY_LATITUDE, latitude);
         newImageValues.put(KEY_LONGITUDE, longitude);
         db.insert(DB_IMAGE_TABLE, null, newImageValues);
-        db.close();
+
 
     }
 

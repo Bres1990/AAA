@@ -65,7 +65,7 @@ public class PhotoManipulation extends Activity{
         Button delete = (Button) findViewById(R.id.delete);
 
         myDatabaseAdapter.open();
-        currentImage = myDatabaseAdapter.getImageByAddress(URI);
+        currentImage = myDatabaseAdapter.getImageByAddress(URI);//z jakiegos powodu zwraca nulla
     }
 
 

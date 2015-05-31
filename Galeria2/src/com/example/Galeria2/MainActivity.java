@@ -42,6 +42,7 @@ public class MainActivity extends Activity {
     int filePosition;
     boolean saved;
     private Notification note;
+    DatabaseAdapter myDatabaseAdapter;
 
 
     public class ImageAdapter extends BaseAdapter {
@@ -246,7 +247,7 @@ public class MainActivity extends Activity {
 
         gridview = (GridView) findViewById(R.id.gridview);
         myImageAdapter = new ImageAdapter(getApplicationContext());
-
+        myDatabaseAdapter = new DatabaseAdapter(getApplicationContext());
 
         gridview.setAdapter(myImageAdapter);
 
@@ -257,11 +258,12 @@ public class MainActivity extends Activity {
 
         //Toast.makeText(getApplicationContext(), targetPath, Toast.LENGTH_LONG).show();
         targetDirector = new File(targetPath);
-
+        myDatabaseAdapter.open();
         try {
             files = targetDirector.listFiles();
             for (File file : files){
                 myImageAdapter.add(file.getAbsolutePath());
+                myDatabaseAdapter.insertImage(file.getName(), file.getAbsolutePath(), null, null);
             }
         }
         catch (NullPointerException e) {
