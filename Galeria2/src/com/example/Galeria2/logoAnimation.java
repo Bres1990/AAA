@@ -24,13 +24,37 @@ public class logoAnimation extends Activity {
 
         ImageView imageBoard = (ImageView) findViewById(R.id.animationView);
 
+        //xxx
         int imagesToShow[] = {R.drawable.szkic1, R.drawable.szkic2, R.drawable.szkic3, R.drawable.owl};//, R.drawable.owlFont};
 
-        animate(imageBoard, imagesToShow, 0, false);
+        //xxx
+        animate(imageBoard, imagesToShow, 0);
+
+        //alternatywnie po zakomentowaniu całego animate i tego nad czym jest //xxx
+        /*
+        Drawable backgrounds[] = new Drawable[4];
+        Resources res = getResources();
+        backgrounds[0] = res.getDrawable(android.R.drawable.szkic1);
+        backgrounds[1] = res.getDrawable(android.R.drawable.szkic2);
+        backgrounds[2] = res.getDrawable(android.R.drawable.szkic3);
+        backgrounds[3] = res.getDrawable(android.R.drawable.owl);
+
+        TransitionDrawable fading = new TransitionDrawable(backgrounds);
+
+        imageBoard.setImageDrawable(crossfader);
+
+        crossfader.startTransition(3000);
+
+        Intent intent=new Intent(logoAnimation.this, StartScreen.class);
+        logoAnimation.this.startActivity(intent);
+         */
+
     }
 
-    private void animate(final ImageView imageView, final int images[], final int imageIndex, boolean when) {
+    private void animate(final ImageView imageView, final int images[], final int imageIndex) {
 
+        int fadeInDuration = 1000, fadeOutDuration = 1000;
+        int timeBetween = 1000;
 
         imageView.setVisibility(View.INVISIBLE);
         imageView.setImageResource(images[imageIndex]);
@@ -38,12 +62,12 @@ public class logoAnimation extends Activity {
         //here go all the fading setting
         Animation fadeIn = new AlphaAnimation(0, 1);
         fadeIn.setInterpolator(new DecelerateInterpolator());
-        fadeIn.setDuration(500);
+        fadeIn.setDuration(fadeInDuration);
 
         Animation fadeOut = new AlphaAnimation(1, 0);
         fadeOut.setInterpolator(new AccelerateInterpolator());
-        fadeOut.setStartOffset(1000);
-        fadeOut.setDuration(500);
+        fadeOut.setStartOffset(fadeInDuration + timeBetween);
+        fadeOut.setDuration(fadeOutDuration);
 
         //here are all animation settings
         AnimationSet animation = new AnimationSet(false);
@@ -57,15 +81,17 @@ public class logoAnimation extends Activity {
             public void onAnimationRepeat(Animation animation) {}
 
             public void onAnimationStart(Animation animation) {
+                while (images.length - 1 > imageIndex) {
+                    animate(imageView, images, imageIndex + 1);
+                }
             }
 
 
             public void onAnimationEnd(Animation animation) {
-                if (images.length - 1 > imageIndex) {
-                    animate(imageView, images, imageIndex + 1, when);
+                if (imageIndex == images.length - 1) {
+                    Intent intent=new Intent(logoAnimation.this, StartScreen.class);
+                    logoAnimation.this.startActivity(intent);
                 }
-                Intent intent = new Intent(logoAnimation.this, StartScreen.class);
-                this.startActivity(intent);
             }
         });
     }
