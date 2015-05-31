@@ -6,5 +6,5 @@
     <view android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           class="com.example.Galeria2.ColorPickerView" android:id="@+id/cpview"
-          android:layout_alignParentBottom="true" android:layout_centerHorizontal="true"/>
+          android:layout_centerVertical="true" android:layout_centerHorizontal="true"/>
 </RelativeLayout>
