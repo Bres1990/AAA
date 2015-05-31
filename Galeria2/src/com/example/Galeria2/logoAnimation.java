@@ -47,8 +47,8 @@ public class logoAnimation extends Activity {
 
         //here are all animation settings
         AnimationSet animation = new AnimationSet(false);
-        animation.addAnimation(500);
-        animation.addAnimation(500);
+        animation.addAnimation(fadeIn);
+        animation.addAnimation(fadeOut);
         animation.setRepeatCount(1);
         imageView.setAnimation(animation);
 
