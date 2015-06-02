@@ -2,97 +2,87 @@ package com.example.Galeria2;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
-import android.view.View;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.DecelerateInterpolator;
+import android.os.Handler;
 import android.widget.ImageView;
 
 /**
-@author Joanna
+ @author Joanna
  **/
 
 public class logoAnimation extends Activity {
+
+    private int imageIndex;
+    private int TIME_BETWEEN = 5000;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.animation_main);
 
-        ImageView imageBoard = (ImageView) findViewById(R.id.animationView);
+        final ImageView imageBoard = (ImageView) findViewById(R.id.animationView);
+
+
+        final Handler handler = new Handler();
 
         //xxx
-        int imagesToShow[] = {R.drawable.szkic1, R.drawable.szkic2, R.drawable.szkic3, R.drawable.owl};//, R.drawable.owlFont};
 
-        //xxx
-        animate(imageBoard, imagesToShow, 0);
 
-        //alternatywnie po zakomentowaniu całego animate i tego nad czym jest //xxx
-        /*
-        Drawable backgrounds[] = new Drawable[4];
-        Resources res = getResources();
-        backgrounds[0] = res.getDrawable(android.R.drawable.szkic1);
-        backgrounds[1] = res.getDrawable(android.R.drawable.szkic2);
-        backgrounds[2] = res.getDrawable(android.R.drawable.szkic3);
-        backgrounds[3] = res.getDrawable(android.R.drawable.owl);
+        final Drawable[] part1 = new Drawable[2];
+        part1[0] = getResources().getDrawable(R.drawable.szkic1);
+        part1[1] = getResources().getDrawable(R.drawable.szkic2);
 
-        TransitionDrawable fading = new TransitionDrawable(backgrounds);
+        final Drawable[] part2 = new Drawable[2];
+        part2[0] = getResources().getDrawable(R.drawable.szkic2);
+        part2[1] = getResources().getDrawable(R.drawable.szkic3);
 
-        imageBoard.setImageDrawable(crossfader);
+        final Drawable[] part3 = new Drawable[2];
+        part3[0] = getResources().getDrawable(R.drawable.szkic3);
+        part3[1] = getResources().getDrawable(R.drawable.owl);
 
-        crossfader.startTransition(3000);
 
-        Intent intent=new Intent(logoAnimation.this, StartScreen.class);
-        logoAnimation.this.startActivity(intent);
-         */
-
-    }
-
-    private void animate(final ImageView imageView, final int images[], final int imageIndex) {
-
-        int fadeInDuration = 1000, fadeOutDuration = 1000;
-        int timeBetween = 1000;
-
-        imageView.setVisibility(View.INVISIBLE);
-        imageView.setImageResource(images[imageIndex]);
-
-        //here go all the fading setting
-        Animation fadeIn = new AlphaAnimation(0, 1);
-        fadeIn.setInterpolator(new DecelerateInterpolator());
-        fadeIn.setDuration(fadeInDuration);
-
-        Animation fadeOut = new AlphaAnimation(1, 0);
-        fadeOut.setInterpolator(new AccelerateInterpolator());
-        fadeOut.setStartOffset(fadeInDuration + timeBetween);
-        fadeOut.setDuration(fadeOutDuration);
-
-        //here are all animation settings
-        AnimationSet animation = new AnimationSet(false);
-        animation.addAnimation(fadeIn);
-        animation.addAnimation(fadeOut);
-        animation.setRepeatCount(1);
-        imageView.setAnimation(animation);
-
-        animation.setAnimationListener(new Animation.AnimationListener() {
-
-            public void onAnimationRepeat(Animation animation) {}
-
-            public void onAnimationStart(Animation animation) {
-                while (images.length - 1 > imageIndex) {
-                    animate(imageView, images, imageIndex + 1);
-                }
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                TransitionDrawable transitionDrawable = new TransitionDrawable(part1);
+                imageBoard.setImageDrawable(transitionDrawable);
+                transitionDrawable.startTransition(TIME_BETWEEN);
             }
+        },500);
 
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                TransitionDrawable transitionDrawable = new TransitionDrawable(part2);
+                imageBoard.setImageDrawable(transitionDrawable);
+                transitionDrawable.startTransition(TIME_BETWEEN);
 
-            public void onAnimationEnd(Animation animation) {
-                if (imageIndex == images.length - 1) {
-                    Intent intent=new Intent(logoAnimation.this, StartScreen.class);
-                    logoAnimation.this.startActivity(intent);
-                }
             }
-        });
+        },500);
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                TransitionDrawable transitionDrawable = new TransitionDrawable(part3);
+                imageBoard.setImageDrawable(transitionDrawable);
+                transitionDrawable.startTransition(TIME_BETWEEN);
+            }
+        },500);
+
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // Do something after 5s = 5000ms
+                Intent intent = new Intent(logoAnimation.this, StartScreen.class);
+                logoAnimation.this.startActivity(intent);
+            }
+        }, 5000);
+
     }
 }
+
+

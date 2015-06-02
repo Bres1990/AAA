@@ -3,8 +3,7 @@
     <CLASSES />
     <JAVADOC />
     <SOURCES>
-      <root url="file://$USER_HOME$/Desktop/gesture-imageview-master/main/src" />
-      <root url="file://$USER_HOME$/Desktop/gesture-imageview-master/example/src" />
+      <root url="file://$PROJECT_DIR$/../gesture-imageview-master/main/src" />
     </SOURCES>
   </library>
 </component>
